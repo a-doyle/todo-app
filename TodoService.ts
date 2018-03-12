@@ -1,33 +1,43 @@
+interface Todo {
+    id: number;
+    name: string;
+    state: TodoState;
+}
+
+enum TodoState {
+    Active = 1,
+    Complete = 2
+}
+
+
 class TodoService {
     private static _lastId = 0;
 
-    private static generateTodoId() {
+    private static generateTodoId(): number {
         return TodoService._lastId += 1;
     }
 
-    private static clone(src) {
+    private static clone<T>(src: T): T {
         var clone = JSON.stringify(src);
         return JSON.parse(clone);
     };
 
-    private todos: any[] = [];
+    private todos: Todo[] = [];
 
-    constructor(todos) {
-        var _this = this;
-
+    constructor(todos: string[]) {
         if (todos) {
-            todos.forEach(function(todo) {
-                _this.add(todo);
-            })
+            todos.forEach(todo => this.add(todo));
         }
     }
 
     // Accepts a todo name or todo object
-    add(input) {
-        var todo = {
+    add(todo: Todo): Todo
+    add(todo: string): Todo
+    add(input): Todo {
+        var todo: Todo = {
             id: TodoService.generateTodoId(),
             name: null,
-            state: 1
+            state: TodoState.Active
         };
 
         if(typeof input === 'string') {
@@ -43,37 +53,35 @@ class TodoService {
         return todo;
     };
 
-    clearCompleted() {
-        this.todos = this.todos.filter(function(x) {
-            return x.state == 1;
-        });
+    clearCompleted(): void {
+        this.todos = this.todos.filter(x => x.state == TodoState.Active);
     }
 
-    getAll() {
+    getAll(): Todo[] {
         return TodoService.clone(this.todos);
     }
 
-    getById(todoId) {
+    getById(todoId: number): Todo {
         var todo = this._find(todoId);
         return TodoService.clone(todo);
     };
 
-    toggle(todoId) {
+    toggle(todoId: number): void {
         var todo = this._find(todoId);
         if(!todo) return;
         switch(todo.state) {
-            case 1:
-                todo.state = 2;
+            case TodoState.Active:
+                todo.state = TodoState.Complete;
                 break;
-            case 2:
-                todo.state = 1;
+
+            case TodoState.Complete:
+                todo.state = TodoState.Active;
                 break;
         }
     }
 
-    private _find(todoId) {
-        var filtered = this.todos.filter(function(x) {
-            return x.id == todoId;
+    private _find(todoId: number): Todo {
+        var filtered = this.todos.filter(x => x.id == todoId);
         });
 
         if(filtered.length) {
