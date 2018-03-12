@@ -82,7 +82,6 @@ class TodoService {
 
     private _find(todoId: number): Todo {
         var filtered = this.todos.filter(x => x.id == todoId);
-        });
 
         if(filtered.length) {
             return filtered[0];
