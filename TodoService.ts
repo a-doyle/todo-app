@@ -9,8 +9,16 @@ enum TodoState {
     Complete = 2
 }
 
+interface ITodoService {
+    add(todo: Todo): Todo;
+    add(todo: string): Todo;
+    clearCompleted(): void;
+    getAll(): Todo[];
+    getById(todoId: number): Todo;
+    toggle(todoId: number): void;
+}
 
-class TodoService {
+class TodoService implements ITodoService {
     private static _lastId = 0;
 
     private static generateTodoId(): number {
