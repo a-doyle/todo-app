@@ -1,6 +1,6 @@
 class TodoApp {
     private todoService: TodoService;
-    private todoList: any;
+    private todoList: TodoListComponent;
 
     constructor(el, todos) {
         this.todoService = new TodoService(todos);
